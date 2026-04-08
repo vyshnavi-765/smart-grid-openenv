@@ -6,15 +6,16 @@ app = FastAPI()
 
 env = SmartGridEnv()
 
-# Home route
+# ✅ Root check
 @app.get("/")
 def home():
     return {"status": "running"}
 
-# ✅ RESET (POST — must accept empty body)
+# ✅ RESET (POST — no input required)
 @app.post("/reset")
 def reset():
     obs = env.reset()
+
     return {
         "status": "ok",
         "observation": obs.dict() if hasattr(obs, "dict") else obs
@@ -27,10 +28,11 @@ class ActionInput(BaseModel):
 @app.post("/step")
 def step(action: ActionInput):
     obs, reward, done, _ = env.step(action)
+
     return {
-        "observation": obs.dict(),
-        "reward": reward.value,
-        "done": done
+        "observation": obs.dict() if hasattr(obs, "dict") else obs,
+        "reward": float(reward.value),
+        "done": bool(done)
     }
 
 # ✅ STATE (GET)
