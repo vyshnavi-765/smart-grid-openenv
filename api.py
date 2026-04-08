@@ -2,19 +2,27 @@ from fastapi import FastAPI
 from env import SmartGridEnv
 
 app = FastAPI()
-
 env = SmartGridEnv()
 
-# Home route
 @app.get("/")
 def home():
     return {"status": "running"}
 
-# ✅ FIXED RESET (POST)
+# ✅ RESET
 @app.post("/reset")
 def reset():
     obs = env.reset()
     return {
-        "status": "ok",
         "observation": obs.dict()
     }
+
+# ✅ STEP
+@app.post("/step")
+def step(action: dict):
+    result = env.step(action)
+    return result
+
+# ✅ STATE
+@app.get("/state")
+def state():
+    return env.state()

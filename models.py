@@ -1,14 +1,11 @@
 from pydantic import BaseModel
-from typing import List
 
 class Observation(BaseModel):
-    demand: List[int]
-    supply: int
-    renewable: int
-    time: int
+    demand: float
+    supply: float
 
 class Action(BaseModel):
-    allocations: List[int]
+    allocation: float
 
 class Reward(BaseModel):
     value: float

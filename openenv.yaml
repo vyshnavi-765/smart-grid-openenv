@@ -1,7 +1,12 @@
 name: smart-grid-env
-description: AI smart grid simulation
+description: Smart Grid Energy Optimization Environment
 
-tasks:
-  - easy
-  - medium
-  - hard
+endpoints:
+  reset: /reset
+  step: /step
+  state: /state
+
+methods:
+  reset: POST
+  step: POST
+  state: GET
