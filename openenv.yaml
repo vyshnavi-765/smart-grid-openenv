@@ -1,0 +1,7 @@
+name: smart-grid-env
+description: AI smart grid simulation
+
+tasks:
+  - easy
+  - medium
+  - hard
