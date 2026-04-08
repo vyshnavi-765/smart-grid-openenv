@@ -5,11 +5,13 @@ app = FastAPI()
 
 env = SmartGridEnv()
 
+# Home route
 @app.get("/")
 def home():
     return {"status": "running"}
 
-@app.get("/reset")
+# ✅ FIXED RESET (POST)
+@app.post("/reset")
 def reset():
     obs = env.reset()
     return {
