@@ -1,41 +1,47 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
+from api import FastAPI
 from env import SmartGridEnv
 
 app = FastAPI()
 
 env = SmartGridEnv()
 
-# ✅ Root check
+# ✅ Root
 @app.get("/")
 def home():
-    return {"status": "running"}
+    return {"status": "ok"}
 
-# ✅ RESET (POST — no input required)
+# ✅ VERY IMPORTANT: MUST accept POST with/without body
 @app.post("/reset")
-def reset():
+async def reset():
     obs = env.reset()
 
+    # Convert safely
+    try:
+        obs_data = obs.dict()
+    except:
+        obs_data = obs
+
     return {
-        "status": "ok",
-        "observation": obs.dict() if hasattr(obs, "dict") else obs
+        "observation": obs_data
     }
 
-# ✅ STEP (POST)
-class ActionInput(BaseModel):
-    allocations: list[int]
-
+# ✅ STEP
 @app.post("/step")
-def step(action: ActionInput):
-    obs, reward, done, _ = env.step(action)
+async def step(action: dict):
+    obs, reward, done, _ = env.step(type("A", (), action))
+
+    try:
+        obs_data = obs.dict()
+    except:
+        obs_data = obs
 
     return {
-        "observation": obs.dict() if hasattr(obs, "dict") else obs,
+        "observation": obs_data,
         "reward": float(reward.value),
         "done": bool(done)
     }
 
-# ✅ STATE (GET)
+# ✅ STATE
 @app.get("/state")
 def state():
     return env.state()

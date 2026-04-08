@@ -1,5 +1,5 @@
 name: smart-grid-env
-description: Smart Grid Energy Optimization Environment
+description: Smart Grid Environment
 
 endpoints:
   reset: /reset
